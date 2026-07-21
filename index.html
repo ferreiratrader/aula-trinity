@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trinity — A aula de hoje</title>
+<meta name="description" content="A aula de hoje da Trinity. No ar somente até a próxima ser liberada.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     AULA DE HOJE — a cada envio, edite 2 campos: videoId e numero
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+const AULA = {
+  // ID do vídeo no YouTube (o que vem depois de "v=" no link).
+  // Ex.: https://youtube.com/watch?v=dQw4w9WgXcQ  →  videoId: "dQw4w9WgXcQ"
+  // Suba o vídeo como "não listado". Deixe "" para o estado de espera.
+  videoId: "-zuxrMjpAr0",
+
+  // Número desta aula na jornada (só cresce: 1, 2, 3…)
+  numero: 1,
+
+  // Link do grupo (Telegram/WhatsApp) — configura uma vez só
+  linkGrupo: "#"
+};
+</script>
+
+<style>
+:root{
+  --bg:#0a0a0b;
+  --line:#222225;
+  --text:#eae8e3;
+  --muted:#8b8983;
+  --accent:#c2a876;
+  --alerta:#d38d55;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+}
+a{color:var(--text)}
+a:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+
+.wrap{width:100%;max-width:1000px;margin:0 auto;padding:0 24px}
+
+.label{
+  font-family:var(--mono);
+  font-size:.68rem;
+  font-weight:500;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.label.accent{color:var(--accent)}
+
+/* ── cabeçalho ── */
+header{padding:52px 0 0}
+.marca{
+  font-family:var(--mono);font-size:.72rem;font-weight:500;
+  letter-spacing:.5em;text-indent:.5em;color:var(--text);
+}
+
+/* ── a aula de hoje ── */
+main{flex:1;display:flex;align-items:center}
+.hoje{padding:44px 0}
+
+/* o contador da jornada — dígitos em mono para "01" nunca virar "OI" */
+.numero{
+  font-family:var(--mono);
+  font-weight:400;
+  font-size:clamp(3.4rem,9vw,5.2rem);
+  line-height:1;
+  letter-spacing:.06em;
+  color:var(--text);
+}
+.numero small{
+  display:block;
+  font-family:var(--mono);
+  font-size:.68rem;
+  font-weight:500;
+  letter-spacing:.32em;
+  text-indent:.32em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-top:16px;
+}
+
+/* estado da aula, em serif, abaixo do contador */
+h1{
+  font-family:var(--serif);
+  font-weight:400;
+  font-style:italic;
+  font-size:clamp(1.3rem,3.4vw,1.7rem);
+  line-height:1.3;
+  letter-spacing:.01em;
+  color:var(--muted);
+  margin:22px auto 40px;
+}
+
+.player{
+  position:relative;aspect-ratio:16/9;
+  background:#060607;
+  border:1px solid var(--line);
+  border-radius:2px;
+  overflow:hidden;
+}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* capa própria — o YouTube só carrega depois do clique, já tocando */
+.capa{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background-size:cover;background-position:center;
+  cursor:pointer;border:0;padding:0;
+}
+.capa::before{content:'';position:absolute;inset:0;background:rgba(6,6,7,.45)}
+.capa .play{
+  position:relative;
+  width:84px;height:84px;border-radius:50%;
+  border:1px solid var(--accent);
+  background:rgba(10,10,11,.6);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .25s ease,transform .25s ease;
+}
+.capa .play svg{margin-left:5px}
+.capa:hover .play{background:var(--accent);transform:scale(1.04)}
+.capa:hover .play svg path{fill:#0a0a0b}
+.capa:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+.espera{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  padding:24px;
+}
+.espera p{color:var(--muted);font-size:.85rem;max-width:34ch}
+
+/* o aviso da casa — embaixo do player, com cor própria de alerta */
+.regra{
+  margin:36px auto 0;
+  max-width:640px;
+  padding:22px 28px;
+  border:1px solid rgba(211,141,85,.45);
+  background:rgba(211,141,85,.05);
+  border-radius:2px;
+  font-size:.9rem;
+  color:var(--muted);
+}
+.regra b{
+  display:block;
+  font-family:var(--mono);
+  font-weight:500;
+  font-size:.74rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--alerta);
+  margin-bottom:10px;
+}
+
+.cta{
+  display:inline-block;margin-top:44px;text-decoration:none;
+  font-family:var(--mono);font-size:.7rem;font-weight:500;
+  letter-spacing:.28em;text-indent:.28em;text-transform:uppercase;
+  color:var(--text);
+  border:1px solid var(--accent);
+  padding:15px 32px;
+  transition:background .25s ease,color .25s ease;
+}
+.cta:hover{background:var(--accent);color:#0a0a0b}
+
+/* ── rodapé ── */
+footer{padding:0 0 44px}
+footer .label{letter-spacing:.32em}
+
+/* entrada sutil */
+@media (prefers-reduced-motion:no-preference){
+  header,.hoje,footer{animation:surgir .9s ease both}
+  .hoje{animation-delay:.08s}
+  footer{animation-delay:.16s}
+  @keyframes surgir{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+}
+
+@media (max-width:560px){
+  header{padding-top:36px}
+  .hoje{padding:36px 0}
+  h1{margin-bottom:30px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">TRINITY</div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="hoje">
+      <div class="numero">
+        <span id="num">—</span>
+        <small>Jornada Trinity · Aula</small>
+      </div>
+
+      <h1 id="estado">—</h1>
+
+      <div class="player" id="player"></div>
+
+      <p class="regra">
+        <b>Esta aula não fica disponível de forma permanente</b>
+        Cada conteúdo é liberado por tempo limitado e substituído pela próxima aula.
+      </p>
+
+      <a class="cta" id="grupo" href="#">Voltar pro grupo</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span class="label">UMA AULA POR VEZ · UM AVANÇO POR DIA</span>
+</footer>
+
+<script>
+// contador da jornada (07, 08, 09…)
+const num = String(AULA.numero).padStart(2, '0');
+document.getElementById('num').textContent = num;
+
+document.getElementById('grupo').href = AULA.linkGrupo;
+
+// player + texto de estado
+const player = document.getElementById('player');
+const estado = document.getElementById('estado');
+if (AULA.videoId) {
+  estado.textContent = 'A aula de hoje está no ar';
+  // capa própria: o player do YouTube (com título, canal, compartilhar…)
+  // só é carregado no clique, e já entra tocando — sem poluição antes do play
+  const capa = document.createElement('button');
+  capa.className = 'capa';
+  capa.setAttribute('aria-label', 'Assistir a aula de hoje');
+  capa.style.backgroundImage =
+    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
+    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/hqdefault.jpg)';
+  capa.innerHTML = '<span class="play"><svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2 L24 15 L2 28 Z" fill="#eae8e3"/></svg></span>';
+  capa.addEventListener('click', () => {
+    player.innerHTML = '<iframe src="https://www.youtube.com/embed/' + AULA.videoId +
+      '?autoplay=1&rel=0&iv_load_policy=3&playsinline=1&fs=1" title="Aula ' + num + ' — Trinity"' +
+      ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+  });
+  player.appendChild(capa);
+} else {
+  estado.textContent = 'A aula de hoje já está a caminho';
+  player.innerHTML = '<div class="espera">' +
+    '<span class="label accent">Aula ' + num + ' · em preparação</span>' +
+    '<p>Fica de olho no grupo — o aviso chega lá assim que o vídeo entrar no ar.</p>' +
+    '</div>';
+}
+</script>
+
+</body>
+</html>
