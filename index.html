@@ -87,19 +87,6 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ouro);outline-offse
 }
 .label.ouro{color:var(--ouro)}
 
-/* display condensado itálico com degradê dourado */
-.dourado{
-  font-family:var(--display);
-  font-style:italic;
-  font-weight:850;
-  font-variation-settings:'wdth' 72;
-  text-transform:uppercase;
-  letter-spacing:.015em;
-  background:linear-gradient(178deg, var(--ouro-claro) 12%, var(--ouro) 55%, var(--ouro-escuro) 100%);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;color:transparent;
-}
-
 /* ── cabeçalho / marca ── */
 header{padding:44px 0 0}
 .marca{
@@ -119,20 +106,6 @@ header{padding:44px 0 0}
 /* ── a aula de hoje ── */
 main{flex:1;display:flex;align-items:center}
 .hoje{padding:40px 0 56px}
-
-.chamada{display:block;margin-bottom:6px}
-.numero{
-  font-size:clamp(3.2rem,9vw,5.4rem);
-  line-height:1.05;
-  display:inline-block;
-  padding-right:.06em; /* itálico não cortar na borda */
-}
-h1{
-  font-weight:400;font-style:italic;
-  font-size:1.02rem;color:var(--muted);
-  letter-spacing:.02em;
-  margin:10px auto 38px;
-}
 
 /* ── player com moldura dourada e brilho ── */
 .player{
@@ -251,10 +224,6 @@ footer .label{letter-spacing:.32em}
 <main>
   <div class="wrap">
     <div class="hoje">
-      <span class="label ouro chamada">Jornada Trinity · A aula de hoje</span>
-      <div class="dourado numero"><span>Aula</span> <span id="num">—</span></div>
-      <h1 id="estado">—</h1>
-
       <div class="player" id="player"></div>
 
       <p class="regra">
@@ -272,18 +241,13 @@ footer .label{letter-spacing:.32em}
 </footer>
 
 <script>
-// contador da jornada (07, 08, 09…)
+// número da aula (usado no estado de espera e no título do player)
 const num = String(AULA.numero).padStart(2, '0');
-document.getElementById('num').textContent = num;
 
 document.getElementById('grupo').href = AULA.linkGrupo;
 
-// player + texto de estado
 const player = document.getElementById('player');
-const estado = document.getElementById('estado');
 if (AULA.videoId) {
-  estado.textContent = 'A aula de hoje está no ar — assista antes que saia';
-
   // o fundo da página é a thumbnail da própria aula, borrada e escurecida
   document.getElementById('fundo').style.backgroundImage =
     'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
@@ -305,7 +269,6 @@ if (AULA.videoId) {
   });
   player.appendChild(capa);
 } else {
-  estado.textContent = 'A aula de hoje já está a caminho';
   player.innerHTML = '<div class="espera">' +
     '<span class="label ouro">Aula ' + num + ' · em preparação</span>' +
     '<p>Fica de olho no grupo — o aviso chega lá assim que o vídeo entrar no ar.</p>' +
