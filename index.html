@@ -7,7 +7,7 @@
 <meta name="description" content="A aula de hoje da Trinity. No ar somente até a próxima ser liberada.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- ═══════════════════════════════════════════════════════════════════
      AULA DE HOJE — a cada envio, edite 2 campos: videoId e numero
@@ -29,34 +29,54 @@ const AULA = {
 
 <style>
 :root{
-  --bg:#0a0a0b;
-  --line:#222225;
-  --text:#eae8e3;
-  --muted:#8b8983;
-  --accent:#c2a876;
+  --bg:#0b0a08;
+  --line:#2a251c;
+  --text:#f2efe8;
+  --muted:#948f85;
+  --ouro-claro:#f6dd8a;
+  --ouro:#d4a03c;
+  --ouro-escuro:#8f6a1e;
   --alerta:#d38d55;
-  --serif:'Cormorant Garamond',Georgia,serif;
-  --sans:'Inter',system-ui,sans-serif;
+  --display:'Archivo',system-ui,sans-serif;
+  --sans:'Archivo',system-ui,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%}
+html,body{min-height:100%}
 body{
   background:var(--bg);
   color:var(--text);
   font-family:var(--sans);
+  font-variation-settings:'wdth' 100;
   font-size:15px;
-  line-height:1.75;
+  line-height:1.7;
   -webkit-font-smoothing:antialiased;
   text-align:center;
   display:flex;
   flex-direction:column;
+  overflow-x:hidden;
 }
-a{color:var(--text)}
-a:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+a:focus-visible,button:focus-visible{outline:1px solid var(--ouro);outline-offset:4px}
+
+/* ── fundo com profundidade: thumbnail da aula borrada + vinheta ── */
+.fundo{
+  position:fixed;inset:-40px;z-index:-2;
+  background-size:cover;background-position:center;
+  filter:blur(42px) saturate(.85) brightness(.5);
+  transform:scale(1.1);
+}
+.fundo::after{content:'';position:absolute;inset:0}
+.vinheta{
+  position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(212,160,60,.10), transparent 60%),
+    radial-gradient(ellipse 120% 90% at 50% 55%, transparent 30%, rgba(11,10,8,.92) 78%),
+    linear-gradient(rgba(11,10,8,.55), rgba(11,10,8,.82));
+}
 
 .wrap{width:100%;max-width:1000px;margin:0 auto;padding:0 24px}
 
+/* tipografia de apoio */
 .label{
   font-family:var(--mono);
   font-size:.68rem;
@@ -65,58 +85,66 @@ a:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
   text-transform:uppercase;
   color:var(--muted);
 }
-.label.accent{color:var(--accent)}
+.label.ouro{color:var(--ouro)}
 
-/* ── cabeçalho ── */
-header{padding:52px 0 0}
+/* display condensado itálico com degradê dourado */
+.dourado{
+  font-family:var(--display);
+  font-style:italic;
+  font-weight:850;
+  font-variation-settings:'wdth' 72;
+  text-transform:uppercase;
+  letter-spacing:.015em;
+  background:linear-gradient(178deg, var(--ouro-claro) 12%, var(--ouro) 55%, var(--ouro-escuro) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+
+/* ── cabeçalho / marca ── */
+header{padding:44px 0 0}
 .marca{
-  font-family:var(--mono);font-size:.72rem;font-weight:500;
-  letter-spacing:.5em;text-indent:.5em;color:var(--text);
+  font-family:var(--display);
+  font-style:italic;font-weight:900;
+  font-variation-settings:'wdth' 78;
+  font-size:2rem;letter-spacing:.04em;text-transform:uppercase;
+  line-height:1;
+}
+.marca small{
+  display:block;
+  font-family:var(--mono);font-style:normal;font-weight:500;
+  font-size:.62rem;letter-spacing:.58em;text-indent:.58em;
+  color:var(--ouro);margin-top:8px;
 }
 
 /* ── a aula de hoje ── */
 main{flex:1;display:flex;align-items:center}
-.hoje{padding:44px 0}
+.hoje{padding:40px 0 56px}
 
-/* o contador da jornada — dígitos em mono para "01" nunca virar "OI" */
+.chamada{display:block;margin-bottom:6px}
 .numero{
-  font-family:var(--mono);
-  font-weight:400;
-  font-size:clamp(3.4rem,9vw,5.2rem);
-  line-height:1;
-  letter-spacing:.06em;
-  color:var(--text);
+  font-size:clamp(3.2rem,9vw,5.4rem);
+  line-height:1.05;
+  display:inline-block;
+  padding-right:.06em; /* itálico não cortar na borda */
 }
-.numero small{
-  display:block;
-  font-family:var(--mono);
-  font-size:.68rem;
-  font-weight:500;
-  letter-spacing:.32em;
-  text-indent:.32em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-top:16px;
-}
-
-/* estado da aula, em serif, abaixo do contador */
 h1{
-  font-family:var(--serif);
-  font-weight:400;
-  font-style:italic;
-  font-size:clamp(1.3rem,3.4vw,1.7rem);
-  line-height:1.3;
-  letter-spacing:.01em;
-  color:var(--muted);
-  margin:22px auto 40px;
+  font-weight:400;font-style:italic;
+  font-size:1.02rem;color:var(--muted);
+  letter-spacing:.02em;
+  margin:10px auto 38px;
 }
 
+/* ── player com moldura dourada e brilho ── */
 .player{
   position:relative;aspect-ratio:16/9;
-  background:#060607;
-  border:1px solid var(--line);
-  border-radius:2px;
+  background:#080705;
+  border:1px solid rgba(212,160,60,.55);
+  border-radius:14px;
   overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(212,160,60,.12),
+    0 0 46px rgba(212,160,60,.16),
+    0 30px 70px -30px rgba(0,0,0,.85);
 }
 .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
@@ -127,19 +155,23 @@ h1{
   background-size:cover;background-position:center;
   cursor:pointer;border:0;padding:0;
 }
-.capa::before{content:'';position:absolute;inset:0;background:rgba(6,6,7,.45)}
+.capa::before{content:'';position:absolute;inset:0;background:rgba(8,7,5,.5)}
 .capa .play{
   position:relative;
-  width:84px;height:84px;border-radius:50%;
-  border:1px solid var(--accent);
-  background:rgba(10,10,11,.6);
+  width:96px;height:96px;border-radius:50%;
+  border:2px solid var(--ouro);
+  background:radial-gradient(circle at 35% 30%, rgba(246,221,138,.25), rgba(11,10,8,.55));
+  box-shadow:0 0 34px rgba(212,160,60,.35);
   display:flex;align-items:center;justify-content:center;
-  transition:background .25s ease,transform .25s ease;
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
 }
-.capa .play svg{margin-left:5px}
-.capa:hover .play{background:var(--accent);transform:scale(1.04)}
-.capa:hover .play svg path{fill:#0a0a0b}
-.capa:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+.capa .play svg{margin-left:6px}
+.capa:hover .play{
+  transform:scale(1.06);
+  box-shadow:0 0 54px rgba(212,160,60,.55);
+  background:linear-gradient(180deg, var(--ouro-claro), var(--ouro));
+}
+.capa:hover .play svg path{fill:#0b0a08}
 .espera{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
@@ -147,16 +179,17 @@ h1{
 }
 .espera p{color:var(--muted);font-size:.85rem;max-width:34ch}
 
-/* o aviso da casa — embaixo do player, com cor própria de alerta */
+/* ── aviso de urgência ── */
 .regra{
-  margin:36px auto 0;
-  max-width:640px;
+  margin:34px auto 0;
+  max-width:660px;
   padding:22px 28px;
-  border:1px solid rgba(211,141,85,.45);
-  background:rgba(211,141,85,.05);
-  border-radius:2px;
+  border:1px solid rgba(211,141,85,.5);
+  background:rgba(211,141,85,.06);
+  border-radius:10px;
   font-size:.9rem;
   color:var(--muted);
+  box-shadow:0 0 30px rgba(211,141,85,.08);
 }
 .regra b{
   display:block;
@@ -169,19 +202,23 @@ h1{
   margin-bottom:10px;
 }
 
+/* ── botão do grupo ── */
 .cta{
-  display:inline-block;margin-top:44px;text-decoration:none;
-  font-family:var(--mono);font-size:.7rem;font-weight:500;
-  letter-spacing:.28em;text-indent:.28em;text-transform:uppercase;
-  color:var(--text);
-  border:1px solid var(--accent);
-  padding:15px 32px;
-  transition:background .25s ease,color .25s ease;
+  display:inline-block;margin-top:40px;text-decoration:none;
+  font-family:var(--display);font-style:italic;font-weight:800;
+  font-variation-settings:'wdth' 80;
+  font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;
+  color:#171204;
+  background:linear-gradient(180deg, var(--ouro-claro), var(--ouro) 70%, #b98a2e);
+  border-radius:8px;
+  padding:16px 40px;
+  box-shadow:0 0 30px rgba(212,160,60,.28), 0 12px 28px -14px rgba(0,0,0,.8);
+  transition:transform .2s ease,box-shadow .2s ease;
 }
-.cta:hover{background:var(--accent);color:#0a0a0b}
+.cta:hover{transform:translateY(-2px);box-shadow:0 0 46px rgba(212,160,60,.45), 0 16px 30px -14px rgba(0,0,0,.8)}
 
 /* ── rodapé ── */
-footer{padding:0 0 44px}
+footer{padding:0 0 40px}
 footer .label{letter-spacing:.32em}
 
 /* entrada sutil */
@@ -189,30 +226,33 @@ footer .label{letter-spacing:.32em}
   header,.hoje,footer{animation:surgir .9s ease both}
   .hoje{animation-delay:.08s}
   footer{animation-delay:.16s}
-  @keyframes surgir{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes surgir{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 }
 
 @media (max-width:560px){
-  header{padding-top:36px}
-  .hoje{padding:36px 0}
-  h1{margin-bottom:30px}
+  header{padding-top:32px}
+  .hoje{padding:32px 0 44px}
+  .marca{font-size:1.6rem}
+  h1{margin-bottom:28px}
+  .capa .play{width:76px;height:76px}
+  .regra{padding:18px 20px}
 }
 </style>
 </head>
 <body>
 
+<div class="fundo" id="fundo"></div>
+<div class="vinheta"></div>
+
 <header>
-  <div class="marca">TRINITY</div>
+  <div class="marca">Trinity<small>TRADER</small></div>
 </header>
 
 <main>
   <div class="wrap">
     <div class="hoje">
-      <div class="numero">
-        <span id="num">—</span>
-        <small>Jornada Trinity · Aula</small>
-      </div>
-
+      <span class="label ouro chamada">Jornada Trinity · A aula de hoje</span>
+      <div class="dourado numero"><span>Aula</span> <span id="num">—</span></div>
       <h1 id="estado">—</h1>
 
       <div class="player" id="player"></div>
@@ -242,7 +282,13 @@ document.getElementById('grupo').href = AULA.linkGrupo;
 const player = document.getElementById('player');
 const estado = document.getElementById('estado');
 if (AULA.videoId) {
-  estado.textContent = 'A aula de hoje está no ar';
+  estado.textContent = 'A aula de hoje está no ar — assista antes que saia';
+
+  // o fundo da página é a thumbnail da própria aula, borrada e escurecida
+  document.getElementById('fundo').style.backgroundImage =
+    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
+    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/hqdefault.jpg)';
+
   // capa própria: o player do YouTube (com título, canal, compartilhar…)
   // só é carregado no clique, e já entra tocando — sem poluição antes do play
   const capa = document.createElement('button');
@@ -251,7 +297,7 @@ if (AULA.videoId) {
   capa.style.backgroundImage =
     'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
     'url(https://i.ytimg.com/vi/' + AULA.videoId + '/hqdefault.jpg)';
-  capa.innerHTML = '<span class="play"><svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2 L24 15 L2 28 Z" fill="#eae8e3"/></svg></span>';
+  capa.innerHTML = '<span class="play"><svg width="30" height="34" viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2 L24 15 L2 28 Z" fill="#f6dd8a"/></svg></span>';
   capa.addEventListener('click', () => {
     player.innerHTML = '<iframe src="https://www.youtube.com/embed/' + AULA.videoId +
       '?autoplay=1&rel=0&iv_load_policy=3&playsinline=1&fs=1" title="Aula ' + num + ' — Trinity"' +
@@ -261,7 +307,7 @@ if (AULA.videoId) {
 } else {
   estado.textContent = 'A aula de hoje já está a caminho';
   player.innerHTML = '<div class="espera">' +
-    '<span class="label accent">Aula ' + num + ' · em preparação</span>' +
+    '<span class="label ouro">Aula ' + num + ' · em preparação</span>' +
     '<p>Fica de olho no grupo — o aviso chega lá assim que o vídeo entrar no ar.</p>' +
     '</div>';
 }
