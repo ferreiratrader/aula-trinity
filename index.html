@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trinity — A aula de hoje</title>
 <meta name="description" content="A aula de hoje da Trinity. No ar somente até a próxima ser liberada.">
+
+<!-- prévia rica quando o link é colado no WhatsApp/Telegram -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Trinity Trader">
+<meta property="og:title" content="🐺 A aula de hoje está no ar">
+<meta property="og:description" content="Conteúdo liberado por tempo limitado — sai do ar quando a próxima aula entrar. Assista agora.">
+<meta property="og:image" content="https://i.ytimg.com/vi/-zuxrMjpAr0/maxresdefault.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0a08'/%3E%3Ctext x='32' y='45' font-family='Arial Black,Arial' font-size='38' font-style='italic' font-weight='900' text-anchor='middle' fill='%23d4a03c'%3ET%3C/text%3E%3C/svg%3E">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -139,12 +150,35 @@ main{flex:1;display:flex;align-items:center}
   transition:transform .25s ease,box-shadow .25s ease,background .25s ease;
 }
 .capa .play svg{margin-left:6px}
-.capa:hover .play{
+.capa:hover .play,.capa:focus-visible .play{
   transform:scale(1.06);
   box-shadow:0 0 54px rgba(212,160,60,.55);
   background:linear-gradient(180deg, var(--ouro-claro), var(--ouro));
 }
-.capa:hover .play svg path{fill:#0b0a08}
+.capa:hover .play svg path,.capa:focus-visible .play svg path{fill:#0b0a08}
+.capa .acao{
+  position:relative;
+  font-family:var(--mono);font-size:.68rem;font-weight:500;
+  letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;
+  color:var(--ouro-claro);
+  margin-top:20px;
+  text-shadow:0 2px 12px rgba(0,0,0,.9);
+}
+.capa .miolo{position:relative;display:flex;flex-direction:column;align-items:center}
+
+/* spinner dourado enquanto o YouTube carrega após o clique */
+.carregando{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.carregando::after{
+  content:'';width:44px;height:44px;border-radius:50%;
+  border:2px solid rgba(212,160,60,.2);border-top-color:var(--ouro);
+  animation:girar .8s linear infinite;
+}
+@keyframes girar{to{transform:rotate(360deg)}}
+.player iframe{opacity:0;transition:opacity .5s ease}
+.player iframe.pronto{opacity:1}
 .espera{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
@@ -204,11 +238,17 @@ footer .label{letter-spacing:.32em}
 
 @media (max-width:560px){
   header{padding-top:32px}
-  .hoje{padding:32px 0 44px}
+  .hoje{padding:28px 0 40px}
   .marca{font-size:1.6rem}
-  h1{margin-bottom:28px}
-  .capa .play{width:76px;height:76px}
-  .regra{padding:18px 20px}
+  .capa .play{width:80px;height:80px}
+  .capa .acao{font-size:.6rem;margin-top:16px}
+  .regra{padding:18px 20px;font-size:.85rem}
+  .cta{display:block;margin-left:24px;margin-right:24px;padding:17px 20px}
+  .fundo{filter:blur(26px) saturate(.85) brightness(.5)} /* blur mais leve p/ celular */
+}
+@media (prefers-reduced-motion:reduce){
+  .carregando::after{animation:none;border-top-color:rgba(212,160,60,.2)}
+  .player iframe{transition:none;opacity:1}
 }
 </style>
 </head>
@@ -227,7 +267,7 @@ footer .label{letter-spacing:.32em}
       <div class="player" id="player"></div>
 
       <p class="regra">
-        <b>Esta aula não fica disponível de forma permanente</b>
+        <b><svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="vertical-align:-2px;margin-right:8px"><circle cx="12" cy="12" r="10" stroke="#d38d55" stroke-width="2"/><path d="M12 6v6l4 3" stroke="#d38d55" stroke-width="2" stroke-linecap="round"/></svg>Esta aula não fica disponível de forma permanente</b>
         Cada conteúdo é liberado por tempo limitado e substituído pela próxima aula.
       </p>
 
@@ -261,11 +301,18 @@ if (AULA.videoId) {
   capa.style.backgroundImage =
     'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
     'url(https://i.ytimg.com/vi/' + AULA.videoId + '/hqdefault.jpg)';
-  capa.innerHTML = '<span class="play"><svg width="30" height="34" viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2 L24 15 L2 28 Z" fill="#f6dd8a"/></svg></span>';
+  capa.innerHTML = '<span class="miolo">' +
+    '<span class="play"><svg width="30" height="34" viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2 L24 15 L2 28 Z" fill="#f6dd8a"/></svg></span>' +
+    '<span class="acao">Assistir a aula de hoje</span>' +
+    '</span>';
   capa.addEventListener('click', () => {
-    player.innerHTML = '<iframe src="https://www.youtube.com/embed/' + AULA.videoId +
+    // spinner enquanto o player do YouTube carrega; o vídeo entra com fade
+    player.innerHTML = '<div class="carregando" aria-hidden="true"></div>' +
+      '<iframe src="https://www.youtube.com/embed/' + AULA.videoId +
       '?autoplay=1&rel=0&iv_load_policy=3&playsinline=1&fs=1" title="Aula ' + num + ' — Trinity"' +
       ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+    const frame = player.querySelector('iframe');
+    frame.addEventListener('load', () => frame.classList.add('pronto'));
   });
   player.appendChild(capa);
 } else {
