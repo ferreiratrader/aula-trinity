@@ -6,6 +6,9 @@
 <title>Trinity — A aula de hoje</title>
 <meta name="description" content="A aula de hoje da Trinity. No ar somente até a próxima ser liberada.">
 
+<!-- conteúdo exclusivo dos alunos: fora dos buscadores -->
+<meta name="robots" content="noindex, nofollow">
+
 <!-- prévia rica quando o link é colado no WhatsApp/Telegram -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Trinity Trader">
@@ -21,19 +24,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- ═══════════════════════════════════════════════════════════════════
-     AULA DE HOJE — a cada envio, edite 2 campos: videoId e numero
+     A aula do dia vem do arquivo aula.json — quem escreve nele é o
+     "Publicar aula.cmd". Os valores abaixo são só a rede de segurança
+     (usados se o aula.json não puder ser lido).
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
-const AULA = {
-  // ID do vídeo no YouTube (o que vem depois de "v=" no link).
-  // Ex.: https://youtube.com/watch?v=dQw4w9WgXcQ  →  videoId: "dQw4w9WgXcQ"
-  // Suba o vídeo como "não listado". Deixe "" para o estado de espera.
+const RESERVA = {
   videoId: "-zuxrMjpAr0",
-
-  // Número desta aula na jornada (só cresce: 1, 2, 3…)
   numero: 1,
-
-  // Link do grupo (Telegram/WhatsApp) — configura uma vez só
   linkGrupo: "#"
 };
 </script>
@@ -281,26 +279,32 @@ footer .label{letter-spacing:.32em}
 </footer>
 
 <script>
-// número da aula (usado no estado de espera e no título do player)
-const num = String(AULA.numero).padStart(2, '0');
-
-document.getElementById('grupo').href = AULA.linkGrupo;
-
 const player = document.getElementById('player');
-if (AULA.videoId) {
+const thumb = id =>
+  'url(https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg), ' +
+  'url(https://i.ytimg.com/vi/' + id + '/hqdefault.jpg)';
+
+function montar(aula) {
+  const num = String(aula.numero).padStart(2, '0');
+  document.getElementById('grupo').href = aula.linkGrupo || '#';
+
+  if (!aula.videoId) {
+    player.innerHTML = '<div class="espera">' +
+      '<span class="label ouro">Aula ' + num + ' · em preparação</span>' +
+      '<p>Fica de olho no grupo — o aviso chega lá assim que o vídeo entrar no ar.</p>' +
+      '</div>';
+    return;
+  }
+
   // o fundo da página é a thumbnail da própria aula, borrada e escurecida
-  document.getElementById('fundo').style.backgroundImage =
-    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
-    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/hqdefault.jpg)';
+  document.getElementById('fundo').style.backgroundImage = thumb(aula.videoId);
 
   // capa própria: o player do YouTube (com título, canal, compartilhar…)
   // só é carregado no clique, e já entra tocando — sem poluição antes do play
   const capa = document.createElement('button');
   capa.className = 'capa';
   capa.setAttribute('aria-label', 'Assistir a aula de hoje');
-  capa.style.backgroundImage =
-    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/maxresdefault.jpg), ' +
-    'url(https://i.ytimg.com/vi/' + AULA.videoId + '/hqdefault.jpg)';
+  capa.style.backgroundImage = thumb(aula.videoId);
   capa.innerHTML = '<span class="miolo">' +
     '<span class="play"><svg width="30" height="34" viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2 L24 15 L2 28 Z" fill="#f6dd8a"/></svg></span>' +
     '<span class="acao">Assistir a aula de hoje</span>' +
@@ -308,19 +312,29 @@ if (AULA.videoId) {
   capa.addEventListener('click', () => {
     // spinner enquanto o player do YouTube carrega; o vídeo entra com fade
     player.innerHTML = '<div class="carregando" aria-hidden="true"></div>' +
-      '<iframe src="https://www.youtube.com/embed/' + AULA.videoId +
+      '<iframe src="https://www.youtube.com/embed/' + aula.videoId +
       '?autoplay=1&rel=0&iv_load_policy=3&playsinline=1&fs=1" title="Aula ' + num + ' — Trinity"' +
       ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
     const frame = player.querySelector('iframe');
     frame.addEventListener('load', () => frame.classList.add('pronto'));
   });
+  player.innerHTML = '';
   player.appendChild(capa);
-} else {
-  player.innerHTML = '<div class="espera">' +
-    '<span class="label ouro">Aula ' + num + ' · em preparação</span>' +
-    '<p>Fica de olho no grupo — o aviso chega lá assim que o vídeo entrar no ar.</p>' +
-    '</div>';
 }
+
+// a aula do dia vem do aula.json, sempre com endereço único para
+// nenhum cache (navegador ou CDN) servir a aula anterior
+(async () => {
+  player.innerHTML = '<div class="carregando" aria-hidden="true"></div>';
+  let aula = RESERVA;
+  try {
+    const r = await fetch('aula.json?t=' + Date.now(), {cache: 'no-store'});
+    if (r.ok) aula = Object.assign({}, RESERVA, await r.json());
+  } catch (e) {
+    // sem rede ou aberto direto do arquivo: segue com a reserva
+  }
+  montar(aula);
+})();
 </script>
 
 </body>

@@ -1,0 +1,48 @@
+═══════════════════════════════════════════════════════════════
+  TRINITY — A AULA DE HOJE
+  Site: https://ferreiratrader.github.io/aula-trinity/
+═══════════════════════════════════════════════════════════════
+
+COMO PUBLICAR A AULA DO DIA (leva 1 minuto)
+
+  1. Suba o vídeo no YouTube como "Não listado".
+     No título do vídeo, coloque o tema da aula — é ele que
+     aparece quando o aluno dá o play.
+
+  2. Dê dois cliques em "Publicar aula.cmd" (nesta pasta).
+     Cole o link do YouTube, aperte ENTER duas vezes.
+
+  3. O programa faz o resto e te entrega:
+       · o link pronto para mandar no grupo (já copiado)
+       · o link para privar a aula de ontem no YouTube
+
+  4. Coloque a aula anterior como PRIVADA no YouTube.
+     É esse passo que faz a aula antiga sumir de verdade.
+
+───────────────────────────────────────────────────────────────
+
+O LINK DO GRUPO É SEMPRE O MESMO?
+
+  O site é sempre o mesmo endereço, mas o programa acrescenta
+  o número da aula no fim (…/?aula=7). Mande o link que ele
+  entrega: é o que faz o WhatsApp mostrar a capa nova em vez
+  de repetir a capa da aula anterior.
+
+SE A AULA AINDA NÃO SUBIU
+
+  Enquanto não houver vídeo publicado, a página mostra
+  "Aula X · em preparação". Ninguém vê uma página quebrada.
+
+PARA CONFERIR O SITE NO SEU PC
+
+  Abra o link do site no navegador. Se acabou de publicar,
+  espere 1 minuto e atualize com CTRL+F5.
+
+───────────────────────────────────────────────────────────────
+
+ARQUIVOS DESTA PASTA
+
+  Publicar aula.cmd .... o programa que publica (use este)
+  aula.json ............ qual aula está no ar agora
+  index.html ........... a página em si
+  publicar.ps1 ......... o motor do programa (não mexer)
